@@ -10,6 +10,8 @@ class Player:
     def move(self, dx, dy):
         self.x += dx
         self.y += dy
+        
+        
 class Home:
     def __init__(self, x, y, w, h):
         self.x = x
@@ -20,6 +22,8 @@ class Home:
     def move(self, dx, dy):
         self.x += dx
         self.y += dy
+        
+        
 
 class Game:
     def __init__(self, width, height, fps=60):
@@ -33,7 +37,20 @@ class Game:
         self.delta_time = 0.0
         self.player = Player(self.width // 2, self.height // 2)
         self.home = Home(0,0, 30, 30)
+        
+        
+    def render_rect(self, rect):
+        pygame.draw.rect(self.window, (255, 0, 0), rect)
+       
 
+        for event in pygame.event.get():
+            if event.type == MOUSEBUTTONDOWN and event.button == 1:
+                mouse_pos = pygame.mouse.get_pos()
+                rect_obj = pygame.Rect(rect)
+                if rect_obj.collidepoint(mouse_pos):
+                    print("Hello, world!")
+
+                    
     def start(self):
         self.is_running = True
         self.on_start()
@@ -79,7 +96,7 @@ class Game:
         camera_y = self.player.y - self.height // 2
 
         self.window.fill((255, 255, 255))  # Fill the window with white color
-        pygame.draw.rect(self.window, (255,255,0), (10,10,10,10))
+        self.render_rect( (10,10,20,20))
         # Render the player at the adjusted position
         player_rect = pygame.Rect(self.player.x - camera_x, self.player.y - camera_y, 20, 20)
         pygame.draw.rect(self.window, (255, 0, 0), player_rect)
