@@ -1,14 +1,38 @@
 import pygame
 from pygame.locals import *
 
+class Player:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        
+
+    def move(self, dx, dy):
+        self.x += dx
+        self.y += dy
+class Home:
+    def __init__(self, x, y, w, h):
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+
+    def move(self, dx, dy):
+        self.x += dx
+        self.y += dy
+
 class Game:
-    def __init__(self, width, height):
+    def __init__(self, width, height, fps=60):
         pygame.init()
         self.width = width
         self.height = height
         self.window = pygame.display.set_mode((self.width, self.height))
         self.clock = pygame.time.Clock()
         self.is_running = False
+        self.fps = fps
+        self.delta_time = 0.0
+        self.player = Player(self.width // 2, self.height // 2)
+        self.home = Home(0,0, 30, 30)
 
     def start(self):
         self.is_running = True
@@ -18,7 +42,8 @@ class Game:
             self.handle_events()
             self.update()
             self.render()
-            self.clock.tick(60)  # Limit the frame rate to 60 FPS
+            self.clock.tick(self.fps)
+            self.delta_time = self.clock.get_time() / 1000.0  # Convert to seconds
 
         self.on_exit()
 
@@ -30,18 +55,42 @@ class Game:
                 self.on_key_down(event.key)
             elif event.type == KEYUP:
                 self.on_key_up(event.key)
-            elif event.type == MOUSEBUTTONDOWN:
-                self.on_mouse_down(event.button, event.pos)
-            elif event.type == MOUSEBUTTONUP:
-                self.on_mouse_up(event.button, event.pos)
-            elif event.type == MOUSEMOTION:
-                self.on_mouse_motion(event.buttons, event.pos, event.rel)
 
     def update(self):
-        pass
+        # Update player position based on user input or game logic
+        dx = 0
+        dy = 0
+
+        keys = pygame.key.get_pressed()
+        if keys[K_LEFT]:
+            dx = -5 
+        elif keys[K_RIGHT]:
+            dx = 5
+        if keys[K_UP]:
+            dy = -5
+        elif keys[K_DOWN]:
+            dy = 5 
+
+        self.player.move(dx, dy)
 
     def render(self):
+        # Calculate the camera position for tracking shot
+        camera_x = self.player.x - self.width // 2
+        camera_y = self.player.y - self.height // 2
+
         self.window.fill((255, 255, 255))  # Fill the window with white color
+        pygame.draw.rect(self.window, (255,255,0), (10,10,10,10))
+        # Render the player at the adjusted position
+        player_rect = pygame.Rect(self.player.x - camera_x, self.player.y - camera_y, 20, 20)
+        pygame.draw.rect(self.window, (255, 0, 0), player_rect)
+        
+        # Other entities or objects in the scene can also be rendered using the same camera position
+        # Example:
+        # entity_rect = pygame.Rect(entity.x - camera_x, entity.y - camera_y, entity.width, entity.height)
+        # pygame.draw.rect(self.window, (0, 0, 255), entity_rect)
+        entity_rect = pygame.Rect(self.home.x - camera_x, self.home.y - camera_y, self.home.w, self.home.h)
+        pygame.draw.rect(self.window, (0, 0, 255), entity_rect)
+
         pygame.display.update()
 
     def on_start(self):
@@ -56,30 +105,6 @@ class Game:
     def on_key_up(self, key):
         pass
 
-    def on_mouse_down(self, button, pos):
-        pass
-
-    def on_mouse_up(self, button, pos):
-        pass
-
-    def on_mouse_motion(self, buttons, pos, rel):
-        pass
-
 # Example usage:
-class MyGame(Game):
-    def on_start(self):
-        print("Game started")
-
-    def update(self):
-        # Game logic and state updates
-        pass
-
-    def render(self):
-        # Render game graphics
-        super().render()
-
-    def on_exit(self):
-        print("Game exited")
-
-game = MyGame(800, 600)
+game = Game(800, 600)
 game.start()
