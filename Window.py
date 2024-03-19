@@ -1,5 +1,6 @@
 from Events import Events
 from pygame import display, draw, font, image, quit, init
+from pygame import time
 
 class Window:
     def __init__(self, width, height, title):
@@ -10,6 +11,8 @@ class Window:
         self.height = height
         self.create_window()
         self.update_title()
+        self.update_color = (255, 255, 255)
+        self.clock = time.Clock()
         
     def create_window(self):
         self.screen = display.set_mode((self.width, self.height))
@@ -51,7 +54,7 @@ class Window:
     def load_image(self, path: str):
         return image.load(path)
     
-    def draw_image(self, path):
-        self.screen.blit(self.load_image(path), (0, 0))
+    def draw_image(self, img, pos=(0, 0)):
+        self.screen.blit(img, pos)
 
 

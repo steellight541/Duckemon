@@ -9,7 +9,3 @@ class Player:
     def move(self, x, y):
         self.pos.x += x
         self.pos.y += y
-
-p = Player()
-p.move(10, 10)
-print(p.pos)  # @[10, 10]

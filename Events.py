@@ -4,10 +4,10 @@ class Events:
     """
     This class is used to get events from the window.
     """
-    def QUIT_event(self):
-        return QUIT
+    def isQuit(self, _event):
+        return _event.type == QUIT
     
-    def get_events(self):
+    def get(self):
         return event.get()
 
     def get_key(self, _key):
