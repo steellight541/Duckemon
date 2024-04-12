@@ -15,6 +15,7 @@ class Game:
     def run(self):
         while True:
             self.update()
+            self.player.move(0.1, 0.1)
             for events in self.window.events.get():
                 if self.window.events.isQuit(events):
                     self.window.close_window()

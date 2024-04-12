@@ -57,3 +57,8 @@ class Vector2D:
     def __str__(self) -> str:
         return f"@[{self.x}, {self.y}]"
 
+class Vector2DI:
+    def __init__(self, x, y, cels: tuple) -> None:
+        self.x = x
+        self.y = y
+        self.cels = cels

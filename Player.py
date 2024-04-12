@@ -9,3 +9,15 @@ class Player:
     def move(self, x, y):
         self.pos.x += x
         self.pos.y += y
+        
+    def up(self, y):
+        self.y -= y
+    
+    def down(self, y):
+        self.y += y 
+    
+    def left(self, x):
+        self.x -= x
+    
+    def right(self, x):
+        self.x += x
